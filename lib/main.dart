@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trabalhotarefas2/Perfil.dart';
+import 'package:trabalhotarefas2/showDetalhes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,33 +43,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _removeTask(int index) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text(
-              'Deletar',
-              style: TextStyle(color: Colors.red),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Deletar',
+            style: TextStyle(color: Colors.red),
+          ),
+          content: const Text('A Tarefa selecionada será EXCLUÍDA'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancelar"),
             ),
-            content: const Text('A Tarefa selecionada será EXCLUÍDA'),
-            actions: <Widget>[
-              TextButton(
+            TextButton(
                 onPressed: () {
+                  setState(() {
+                    tasks.removeAt(index);
+                    taskStatus.removeAt(index);
+                  });
                   Navigator.of(context).pop();
                 },
-                child: const Text("Cancelar"),
-              ),
-              TextButton(
-                  onPressed: () {
-                    setState(() {
-                      tasks.removeAt(index);
-                      taskStatus.removeAt(index);
-                    });
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Ok'))
-            ],
-          );
-        });
+                child: const Text('Ok'))
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -106,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.blue.shade100,
               width: 400,
               child: const Text(
-                'Home',
+                'Meu Dia',
                 style: TextStyle(fontSize: 40),
               ),
             ),
@@ -115,25 +117,48 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             //Expanded serve para fazer seus filhos preencher o espaço disponivel
             Expanded(
+              
               child: ListView.builder(
+                
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Checkbox(
-                      value: taskStatus[index],
-                      onChanged: (newValue) {
-                        setState(() {
-                          taskStatus[index] = newValue!;
-                          // print(taskStatus);
-                        });
-                      },
-                    ),
-                    title: Text(tasks[index]),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete,color: Colors.red,),
-                      onPressed: () {
-                        _removeTask(index);
-                      },
+                  return Card(
+                    color: Colors.blue.shade100,
+                    child: ListTile(
+                      leading: Checkbox(
+                        value: taskStatus[index],
+                        onChanged: (newValue) {
+                          setState(() {
+                            taskStatus[index] = newValue!;
+                            // print(taskStatus);
+                          });
+                        },
+                      ),
+                      title: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShowDetalhes(
+                                taskName: tasks[index],
+                                taskStatus: taskStatus[index],
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text(tasks[index],style: TextStyle(color: taskStatus[index]? Colors.grey : Colors.black, decoration: taskStatus[index] ? TextDecoration.lineThrough : null,),),
+                      ),
+                    
+                      // title: Text(tasks[index]),
+                      trailing: IconButton(
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                        onPressed: () {
+                          _removeTask(index);
+                        },
+                      ),
                     ),
                   );
                 },
