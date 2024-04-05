@@ -18,8 +18,8 @@ class Perfil extends StatelessWidget {
               ),
             ),
             Container(
-              child: Image.network(
-                'https://avatars.githubusercontent.com/u/121257501?v=4',
+              child: Image.asset(
+                'assets/Kawan.png',
               ),
             ),
             Container(
@@ -35,8 +35,8 @@ class Perfil extends StatelessWidget {
               ),
             ),
             Container(
-              child: Image.network(
-                'https://avatars.githubusercontent.com/u/116606736?v=4',
+              child: Image.asset(
+                'assets/brunoBinga.jpeg',
               ),
             ),
             Container(
