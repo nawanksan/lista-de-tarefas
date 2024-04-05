@@ -27,11 +27,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final TextEditingController _taskController = TextEditingController();
   List<String> tasks = [
-    "Task 1",
-    "Task 2",
-    "Task 3",
-    "Task 4"
+    "Estudar Flutter",
+    "Pesquisar Artigos para o TCC",
+    "Fazer o Projeto Integrador",
+    "Fazer a janta"
   ]; // Lista de tarefas
   List<bool> taskStatus = [
     false,
@@ -105,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
+              alignment: Alignment.center,
               color: Colors.blue.shade100,
               width: 400,
               child: const Text(
@@ -117,9 +119,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             //Expanded serve para fazer seus filhos preencher o espaço disponivel
             Expanded(
-              
+
               child: ListView.builder(
-                
+
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
                   return Card(
@@ -148,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                         child: Text(tasks[index],style: TextStyle(color: taskStatus[index]? Colors.grey : Colors.black, decoration: taskStatus[index] ? TextDecoration.lineThrough : null,),),
                       ),
-                    
+
                       // title: Text(tasks[index]),
                       trailing: IconButton(
                         icon: const Icon(
@@ -168,12 +170,72 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+
+              return Container(
+                height: 400,
+                child: Column(
+                  children: [
+                    const Text(
+                      "Adicionar Tarefas: ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20
+                      ),
+                    ),
+
+                    const SizedBox(height: 20.0),
+
+                    TextField(
+                      decoration: const InputDecoration(
+                        labelText: 'Tarefa',
+                        border: OutlineInputBorder(),
+                      ),
+                      controller: _taskController,
+                    ),
+
+                    const SizedBox(height: 20.0,),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ElevatedButton(
+                          
+                          onPressed: () {
+                            setState(() {
+                              String newTask = _taskController.text;
+                              if(newTask.length < 1) {
+                                return;
+                              } else {
+                                tasks.add(newTask);
+                                taskStatus.add(false);
+                                _taskController.clear();
+                              }
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(0, 36),
+                            backgroundColor: Colors.green // Tamanho mínimo do botão (largura, altura)
+                          ),
+                          child: Container(
+                            alignment: Alignment.center, // Alinhamento do texto dentro do botão
+                            child: Text("Adicionar", style: TextStyle(color: Colors.white),),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              );
+            },
+          );
+        },
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation:
-          FloatingActionButtonLocation.endFloat, // Posicionamento do botão
-    );
-  }
-}
+      FloatingActionButtonLocation.endFloat, // Posicionamento do botão
+);}}
